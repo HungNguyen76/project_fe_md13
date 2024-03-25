@@ -2,66 +2,143 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nike</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <link rel="stylesheet" href="././assets/css/home.css">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="./assets/css/home.css">
+    <link rel="stylesheet" href="./assets/css/checkout.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" />
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">Nike</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul id="navbar" class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item" onclick="renderMenListProducts()">
-            <a class="nav-link active" aria-current="page" href="#">Men</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Women</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Accessories
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Hat</a></li>
-              <li><a class="dropdown-item" href="#">Shoes</a></li>
-              <li><a class="dropdown-item" href="#">Clothes</a></li>
-            </ul>
-          </li>
-        </ul>
-        <form class="d-flex" role="search">
-          <a href="pages/login.html" class="btn btn-outline-success">Login</a>
-          <a href="pages/register.html" class="btn btn-outline-success">Register</a>
-        </form>
-      </div>
+    <nav class="nagivation-container">
+        <div class="header">
+            <div class="header-right">
+                <span class="help">Trợ giúp</span>
+                <span class="help">Hệ thống cửa hàng</span>
+                <div class="language">
+                    <span>English</span>
+                    <span class="active">Tiếng Việt</span>
+                </div>
+            </div>
+        </div>
+        <div class="nagivation">
+            <div class="nagivation-left">
+                <div class="logo">
+                    <a href="index.html"><img src="https://upload.wikimedia.org/wikipedia/commons/3/36/Logo_nike_principal.jpg" alt=""></a>
+                </div>
+                <ul id="navbar">
+                    <li onclick="renderListAllProducts()">All</li>
+                    <li onclick="renderWomenListProducts()">WOMEN</li>
+                    <li onclick="renderMenListProducts()">MEN</li>
+                    <li onclick="renderKidsListProducts()">KIDS</li>
+                    <li onclick="renderBabyListProducts()">BABY</li>
+                    <a href="#" id="close"><i class="far fa-times"></i></a>
+                </ul>
+            </div>
+            <div class="nagivation-right">
+                <ul>
+                    <li>
+                        <ion-icon name="search" onclick="searchProduct()"></ion-icon>
+                    </li>
+                    <li>
+                        <a href="./pages/login.html"><ion-icon name="person-outline" class="login-button"></ion-icon></a>
+                        <ion-icon name="log-in-outline" onclick="checkLogout()" class="logout-button"></ion-icon>
+                    </li>
+                    <li>
+                        <ion-icon name="heart-outline"></ion-icon>
+                    </li>
+                    <li class="cart-user">
+                        <ion-icon name="cart-outline" onclick="showCartProducts()" class="cart-product"></ion-icon>
+                        <span class="cart-quantity">0</span>
+                    </li>
+                    <li id="mobile">
+                        <i id="bar" class="fas fa-outdent"></i>
+                    </li>
+                    <li class="admin">
+                        <span class="material-symbols-outlined">
+                            shield_person
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="searchProduct-container">
+        </div>
+        <div class="search-input">
+            <input class="search-product" type="text" placeholder="Tìm kiếm theo từ khoá"
+                oninput="searchInputProduct()">
+            <div class="search-button"><ion-icon name="search-outline" style="color: #fff;"></ion-icon></div>
+            <div class="close-button" onclick="closeSearchProduct()"><ion-icon name="close-sharp"></ion-icon></div>
+            <ion-icon name="close-sharp" class="delete-searchInput" onclick="deleteSearchInput()"></ion-icon>
+        </div>
+    </nav>
+
+    <div class="banner-container">
+        <div class="banner-top">
+            <img class="mySlides" src="https://c4.wallpaperflare.com/wallpaper/341/177/170/smoking-nike-wallpaper-preview.jpg" alt="">
+            <img class="mySlides" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQtuB8u3GdF86T2t0JiTnXe7x77NUv0ZJrurhhAhw08YvQ-TPVy3tfQLrqWRb78UlPpAY&usqp=CAU" alt="">
+            <img class="mySlides" src="../assets/images/banners/banner3.png" alt="">
+            <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
+            <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
+        </div>
+        <div class="banner-bottom">
+            <img class="banner-image" src="../assets/images/banners/background.png" alt="">
+            <img class="banner-image" src="../assets/images/banners/background2.png" alt="">
+        </div>
     </div>
-  </nav>
 
+    <div class="content-container">
 
+    </div>
+    <ul class="listPage">
 
-  <div class="content-container">
+    </ul>
 
-  </div>
-  <ul class="listPage">
+        <div class="cartProducts-container">
+            <div class="cartProducts-header">
+                <div class="title">SHOPPING CART</div>
+                <div class="cartProducts-close">
+                    <span class="material-symbols-outlined">
+                        close
+                    </span>
+                </div>
+            </div>
+            <div class="cartProductItems">
 
-  </ul>
+            </div>
+            <div class="cartProducts-subTotal">
 
+            </div>
+            <div class="cartProducts-button">
+                <button class="cartProducts-continue-btn">CONTINUE SHOPPING</button>
+                <button class="cartProducts-checkout-btn">CHECKOUT</button>
+            </div>
+        </div>
 
+    <div id="toast"></div>
+    <!-- <footer class="footer-container">
+        <div class="footer-left">
+            <p class="text">Copyright © NIKE Co., Ltd. All rights reserved.</p><br>
+            <p>Contact: 0123456789</p>
+        </div>
+        <div class="footer-right">
+            <ion-icon name="logo-facebook"></ion-icon>
+            <ion-icon name="logo-twitter"></ion-icon>
+            <ion-icon name="logo-instagram"></ion-icon>
+            <ion-icon name="logo-youtube"></ion-icon>
+        </div>
+    </footer> -->
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-    crossorigin="anonymous"></script>
-
-  <script src="./assets/js/global.js"></script>
-
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="./assets/js/global.js"></script>
+    <script src="./assets/js/toastMessage.js"></script>
 </body>
 
 </html>

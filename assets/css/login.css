@@ -1,0 +1,125 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: sans-serif;
+}
+
+.header-login {
+    height: 120px;
+    border-bottom: 1px solid #dadada;
+    align-items: center;
+    display: flex;
+}
+
+.logo img {
+    width: 90px;
+    height: 50px;
+    margin-left: 30px;
+}
+
+.login-container {
+    border: 1px solid #dadada;
+    display: flex;
+    padding: 20px;
+    width: 90%;
+    margin: 80px auto 0px;
+}
+
+.login-container .login-form {
+    flex: 1;
+    border-right: 1px solid #dadada;
+    /* border: 1px solid; */
+}
+
+.login-container .login-form h2 {
+    font-size: 40px;
+}
+
+.login-container .login-form p {
+    margin: 10px 0px;
+}
+
+.login-container .login-form label {
+    font-weight: bold;
+}
+
+.login-container .login-form #email,
+#password {
+    width: 95%;
+    padding: 15px;
+    margin: 10px 0px;
+    border: none;
+    outline: none;
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #d5d5d5;
+}
+
+.login-container .login-form .text {
+    font-size: 14px;
+    color: gray;
+    margin-bottom: 20px;
+}
+
+.login-container .login-form .showPassword {
+    margin: 20px 0px;
+}
+
+.login-container .login-form a {
+    color: #000;
+    font-weight: bold;
+}
+
+#loginButton {
+    border: none;
+    background-color: #000;
+    color: #fff;
+    font-size: 20px;
+    padding: 10px 100px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.login-container .register-form {
+    flex: 1;
+    padding-left: 20px;
+    /* border: 1px solid; */
+}
+
+.login-container .register-form h2 {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.login-container .register-form p {
+    margin-bottom: 10px;
+}
+
+.registerButton {
+    border: none;
+    background-color: #000;
+    color: #fff;
+    font-size: 20px;
+    padding: 10px 100px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.form-group.invalid .form-control {
+    border-color: #f33a58;
+}
+
+.form-group.invalid .form-message {
+    color: #f33a58;
+}
+
+.form-message {
+    font-size: 14px;
+    line-height: 1.6rem;
+    padding: 4px 0 0;
+}

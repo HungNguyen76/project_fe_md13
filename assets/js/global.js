@@ -1,12 +1,12 @@
 let listProductsStock = [
     {
-        img: "../images/productItem/air-jordan-9-retro-mens-shoes-3WfxKt.png",
+        img: "/assets/images/productItem/air-jordan-9-retro-mens-shoes-3WfxKt.png",
         name: "AIRism Cotton T (short sleeve)",
         price: 14.90,
         type: "MEN",
         options: [
             {
-                src: "../images/productItem/air-jordan-9-retro-mens-shoes-3WfxKt-FQ8992-101.png",
+                src: "/assets/images/productItem/air-jordan-9-retro-mens-shoes-3WfxKt-FQ8992-101.png",
                 sizes: [
                     {
                         key: "S",
@@ -23,7 +23,7 @@ let listProductsStock = [
                 ],
             },
             {
-                src: "../images/productItem/air-jordan-9-retro-mens-shoes-3WfxKt-FQ8992-102.png",
+                src: "/assets/images/productItem/air-jordan-9-retro-mens-shoes-3WfxKt-FQ8992-102.png",
                 sizes: [
                     {
                         key: "S",
@@ -40,7 +40,7 @@ let listProductsStock = [
                 ],
             },
             {
-                src: "../images/productItem/air-jordan-9-retro-mens-shoes-3WfxKt-FQ8992-103.png",
+                src: "/assets/images/productItem/air-jordan-9-retro-mens-shoes-3WfxKt-FQ8992-103.png",
                 sizes: [
                     {
                         key: "S",
@@ -59,6 +59,61 @@ let listProductsStock = [
         ],
     },
 ]
+
+window.onload = function () {
+    const bar = document.getElementById("bar");
+    const close = document.getElementById("close");
+    const nav = document.getElementById("navbar");
+
+    if (bar) {
+        bar.addEventListener("click", () => {
+            nav.classList.add("active");
+        });
+    }
+
+    if (close) {
+        close.addEventListener("click", () => {
+            nav.classList.remove("active");
+        });
+    }
+};
+
+// Create a Fixed Header on Scroll
+window.onscroll = function () { myFunction() };
+
+let header = document.querySelector(".nagivation-container");
+let sticky = header.offsetTop;
+
+function myFunction() {
+    if (window.pageYOffset > sticky) {
+        header.classList.add("sticky");
+    } else {
+        header.classList.remove("sticky");
+    }
+}
+
+// Hàm hiển thị banner
+let slideIndex = 1;
+// call showDivs() to display the first image
+showDivs(slideIndex);
+
+function plusDivs(n) {
+    showDivs(slideIndex += n);
+}
+
+// The showDiv() function hides (display="none") all elements with the class name "mySlides", 
+// and displays (display="block") the element with the given slideIndex
+function showDivs(n) {
+    let i;
+    let x = document.getElementsByClassName("mySlides");
+    if (n > x.length) { slideIndex = 1 }
+    if (n < 1) { slideIndex = x.length }
+    // Hides (display="none") all elements with the class name "mySlides"
+    for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";
+    }
+    x[slideIndex - 1].style.display = "block";
+}
 
 //Format tiền
 const USDollar = new Intl.NumberFormat('en-US', {
