@@ -393,6 +393,7 @@ function showCartProducts() {
         `
     }
     document.querySelector(".cartProductItems").innerHTML = result;
+    caculateTotalProductsPrice();
 }
 document.querySelector(".cartProducts-close").addEventListener("click", () => {
     document.querySelector(".cartProducts-container").style.display = "none";
@@ -400,3 +401,17 @@ document.querySelector(".cartProducts-close").addEventListener("click", () => {
     document.querySelector(".content-container").style.opacity = 1;
     document.querySelector(".banner-container").style.opacity = 1;
 })
+
+//Hàm tính tổng tiền sản phẩm có trong giỏ hàng
+function caculateTotalProductsPrice() {
+     let listUsers = JSON.parse(localStorage.getItem("listUsers"));
+    let checkLogin = localStorage.getItem("checkLogin");
+    let user = listUsers.find((item) => {
+        return item.idUser == checkLogin
+    })
+    let cartUser = user.cartUser;
+    let totalPrice = cartUser.reduce((total, currentValue) => {
+        return total += currentValue.productPrice * currentValue.quantity
+    }, 0)
+    document.querySelector(".cartProducts-subTotal").innerHTML = `Subtotal: ${USDollar.format(totalPrice)}`
+}
