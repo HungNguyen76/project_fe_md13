@@ -1,7 +1,8 @@
 let listProductsStock = [
     {
         img: "/assets/images/productItem/air-jordan-9-retro-mens-shoes-3WfxKt.png",
-        name: "AIRism Cotton T (short sleeve)",
+        name: "Air Jordan 9 Retro",
+        des: "Celebrating its 30th anniversary—and the first release with original design specs since the '93 debut—the AJ9 is back. We kept all the iconic details, like the minimalist leather upper, lacing system and jagged midsole. Step in and throw it back.",
         price: 14.90,
         type: "MEN",
         options: [
@@ -41,6 +42,186 @@ let listProductsStock = [
             },
             {
                 src: "/assets/images/productItem/air-jordan-9-retro-mens-shoes-3WfxKt-FQ8992-103.png",
+                sizes: [
+                    {
+                        key: "S",
+                        stock: 10
+                    },
+                    {
+                        key: "M",
+                        stock: 10
+                    },
+                    {
+                        key: "L",
+                        stock: 10
+                    }
+                ],
+            },
+        ],
+    },
+    {
+        img: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/ecdf5522-ebbf-4252-93e4-fc2c12d2ea29/air-jordan-1-low-shoes-6Q1tFM.png",
+        name: "Air Jordan 1 Low",
+        des: "Inspired by the original that debuted in 1985, the Air Jordan 1 Low offers a clean, classic look that's familiar yet always fresh. With an iconic design that pairs perfectly with any 'fit, these kicks ensure you'll always be on point.",
+        price: 100.50,
+        type: "MEN",
+        options: [
+            {
+                src: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/df27052d-2d06-47fc-bc05-e285f08e4965/air-jordan-1-low-shoes-6Q1tFM.png",
+                sizes: [
+                    {
+                        key: "S",
+                        stock: 10
+                    },
+                    {
+                        key: "M",
+                        stock: 10
+                    },
+                    {
+                        key: "L",
+                        stock: 10
+                    }
+                ],
+            },
+            {
+                src: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/fd808f28-21d1-4031-a8ef-3b2f6398cfa0/air-jordan-1-low-shoes-6Q1tFM.png",
+                sizes: [
+                    {
+                        key: "S",
+                        stock: 10
+                    },
+                    {
+                        key: "M",
+                        stock: 10
+                    },
+                    {
+                        key: "L",
+                        stock: 10
+                    }
+                ],
+            },
+            {
+                src: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/edaf636d-5d82-42f0-86d0-7459d6f3a6fb/air-jordan-1-low-shoes-6Q1tFM.png",
+                sizes: [
+                    {
+                        key: "S",
+                        stock: 10
+                    },
+                    {
+                        key: "M",
+                        stock: 10
+                    },
+                    {
+                        key: "L",
+                        stock: 10
+                    }
+                ],
+            },
+        ],
+    },
+    {
+        img: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/aff63355-b2e9-47fb-adae-4b60ba1f602e/air-jordan-1-mid-shoes-SQf7DM.png",
+        name: "Air Jordan 1 Mid",
+        des: "Inspired by the original AJ1, this mid-top edition maintains the iconic look you love while choice colours and crisp leather give it a distinct identity.",
+        price: 90.50,
+        type: "MEN",
+        options: [
+            {
+                src: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/a842a15a-f4f2-4211-9a13-6cf82d6770e9/air-jordan-1-mid-shoes-SQf7DM.png",
+                sizes: [
+                    {
+                        key: "S",
+                        stock: 10
+                    },
+                    {
+                        key: "M",
+                        stock: 10
+                    },
+                    {
+                        key: "L",
+                        stock: 10
+                    }
+                ],
+            },
+            {
+                src: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/288a2235-54ce-4f8e-a133-0117cbc381b4/air-jordan-1-mid-shoes-SQf7DM.png",
+                sizes: [
+                    {
+                        key: "S",
+                        stock: 10
+                    },
+                    {
+                        key: "M",
+                        stock: 10
+                    },
+                    {
+                        key: "L",
+                        stock: 10
+                    }
+                ],
+            },
+            {
+                src: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/4f864b95-0da2-4f66-b1c7-2cfb6e655bc6/air-jordan-1-mid-shoes-SQf7DM.png",
+                sizes: [
+                    {
+                        key: "S",
+                        stock: 10
+                    },
+                    {
+                        key: "M",
+                        stock: 10
+                    },
+                    {
+                        key: "L",
+                        stock: 10
+                    }
+                ],
+            },
+        ],
+    },
+    {
+        img: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/45d37b3f-7afa-4263-82cb-792b770b7fb8/jordan-max-aura-5-shoes-ZBZ4Pz.png",
+        name: "Jordan Max Aura 5",
+        des: "When you need a shoe that's ready 24/7, it's gotta be the Max Aura 5. Inspired by the AJ3, this pair of kicks puts a modern spin on the classic. They're made from durable leather and textiles that sit atop a heel of Nike Air cushioning so you can walk, run or skate all day and still have fresh-feeling soles.",
+        price: 105.50,
+        type: "MEN",
+        options: [
+            {
+                src: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/45d37b3f-7afa-4263-82cb-792b770b7fb8/jordan-max-aura-5-shoes-ZBZ4Pz.png",
+                sizes: [
+                    {
+                        key: "S",
+                        stock: 10
+                    },
+                    {
+                        key: "M",
+                        stock: 10
+                    },
+                    {
+                        key: "L",
+                        stock: 10
+                    }
+                ],
+            },
+            {
+                src: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/902b0fb0-ab1e-4213-ab91-3e08c124093c/jordan-max-aura-5-shoes-ZBZ4Pz.png",
+                sizes: [
+                    {
+                        key: "S",
+                        stock: 10
+                    },
+                    {
+                        key: "M",
+                        stock: 10
+                    },
+                    {
+                        key: "L",
+                        stock: 10
+                    }
+                ],
+            },
+            {
+                src: "https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco,u_126ab356-44d8-4a06-89b4-fcdcc8df0245,c_scale,fl_relative,w_1.0,h_1.0,fl_layer_apply/2c87b88f-9873-46e6-9929-ccafa445e49b/jordan-max-aura-5-shoes-ZBZ4Pz.png",
                 sizes: [
                     {
                         key: "S",
@@ -212,10 +393,7 @@ function renderProductItem(idProduct) {
             <div class="productItem-description">
                 <h2>${productItem.name}</h2>
                 <h3>${USDollar.format(productItem.price)}</h3>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente error totam harum iste deserunt
-                suscipit enim aliquam nihil veritatis quam minima architecto ad corporis, facere ut veniam et quas
-                culpa.
-                </p>
+                <p>${productItem.des}</p>
                 <h4>Size</h4>
                 <div>
                     <input type="radio" id="S" value="S" name="size" class="size-option">
