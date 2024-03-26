@@ -188,7 +188,7 @@ function renderListProducts(params) {
     document.querySelector(".content-container").innerHTML = result;
     document.querySelector(".content-container").style.display = "flex";
     document.querySelector(".banner-container").style.display = "none";
-    document.querySelector(".footer-container").classList.remove("active-footer");
+    // document.querySelector(".footer-container").classList.remove("active-footer");
 }
 
 //Hiển thị chi tiết sản phẩm
@@ -249,3 +249,154 @@ function renderProductItem(idProduct) {
     }
     productItemColor.innerHTML = productColors;
 }
+
+//Hàm kiểm tra xem đã đăng nhập hay chưa
+function checkLogin() {
+    let isLogin = localStorage.getItem("checkLogin");
+    if (isLogin == null) {
+        return false
+    } else {
+        return true
+    }
+}
+
+//Hàm kiểm tra đăng xuất hay chưa
+function checkLogout() {
+    let confirmLogout = confirm("Bạn có muốn thoát không?");
+    if (confirmLogout) {
+        localStorage.removeItem("checkLogin");
+        window.location.href = "index.html";
+        document.querySelector(".logout-button").style.display = "hidden";
+
+    }
+}
+
+if (checkLogin()) {
+    document.querySelector(".login-button").style.display = "none";
+    document.querySelector(".logout-button").style.display = "block";
+}
+
+// Hàm thêm sản phẩm vào giỏ hàng
+function addToCart(idProduct) {
+    let checkLogin = localStorage.getItem("checkLogin");
+
+    if (checkLogin == null) {
+        alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng")
+        return
+    }
+
+    let listProducts = JSON.parse(localStorage.getItem("listProducts"));
+    let listUsers = JSON.parse(localStorage.getItem("listUsers"));
+    let selectedSize = null
+    let idOption = document.querySelector(".product-idOption").innerHTML;
+
+    const sizeOptions = document.querySelectorAll(".size-option");
+    for (let i = 0; i < sizeOptions.length; i++) {
+        if (sizeOptions[i].checked) {
+            selectedSize = sizeOptions[i].value
+            break
+        }
+    }
+    if (selectedSize == null) {
+        alert("Bạn cần chọn size")
+        return
+    }
+    let product = listProducts.find((item) => {
+        return item.id == idProduct
+    })
+
+    let option = product.options.find((item) => {
+        return item.idOption == idOption
+    })
+    let imageLink = option.src
+    let productName = product.name
+    let productPrice = product.price
+
+    for (let i = 0; i < listUsers.length; i++) {
+        if (listUsers[i].idUser == checkLogin) {
+            let cart = listUsers[i].cartUser
+
+            //kiểm tra sản phẩm đã có trong giỏ hàng chưa
+            let existingProduct = cart.find((item) => {
+                return item.size == selectedSize && item.idOption == idOption
+            })
+            if (existingProduct) {
+                existingProduct.quantity++
+                localStorage.setItem("listUsers", JSON.stringify(listUsers))
+                alert("Thêm sản phẩm vào giỏ hàng thành công")
+            } else {
+                cart.push({
+                    idProduct: idProduct,
+                    size: selectedSize,
+                    quantity: 1,
+                    idOption: idOption,
+                    imageLink: imageLink,
+                    productName: productName,
+                    productPrice: productPrice
+                })
+                localStorage.setItem("listUsers", JSON.stringify(listUsers))
+                alert("Thêm sản phẩm vào giỏ hàng thành công")
+            }
+        }
+    }
+}
+
+//Hàm hiển thị danh sách sản phẩm giỏ hàng
+function showCartProducts() {
+    document.querySelector(".cartProducts-container").style.display = "block";
+    document.querySelector(".nagivation-container").style.opacity = 0.5;
+    document.querySelector(".content-container").style.opacity = 0.5;
+    document.querySelector(".banner-container").style.opacity = 0.5;
+
+    let listUsers = JSON.parse(localStorage.getItem("listUsers"));
+    let checkLogin = localStorage.getItem("checkLogin");
+    let user = listUsers.find((item) => {
+        return item.idUser == checkLogin
+    })
+    let cartUser = user.cartUser;
+    let result = ""
+    for (let i = 0; i < cartUser.length; i++) {
+        result += `
+        <div class="cartProductItem" id = "cartProductItem_${i}">
+                <div class="cartItem">
+                    <div class="cartProductItem-image">
+                        <img src="${cartUser[i].imageLink}" alt="">
+                    </div>
+                    <div class="cartProductItem-info">
+                        <h4>${cartUser[i].productName}</h4>
+                        <p>Product code: ${cartUser[i].idOption}</p>
+                        <p>Size: ${cartUser[i].size}</p>
+                        <p>${USDollar.format(cartUser[i].productPrice)}</p>
+                            <div class="changeQuantity-button">
+                                <button>
+                                    <span class="material-symbols-outlined" onclick="decreaseItem(${i})">
+                                        remove
+                                    </span>
+                                </button>
+                                
+                                <span class="productItem-quantity" id="quantity">${cartUser[i].quantity}</span>
+
+                                <button>
+                                    <span class="material-symbols-outlined" onclick="increaseItem(${i})">
+                                        add
+                                    </span>
+                                </button>
+                            </div>
+                    </div>
+                </div>
+                <div class="cartItem-delete-button" onclick = "deleteCartProductItem(${i})">
+                        <span class="material-symbols-outlined">
+                            close
+                        </span>
+                </div>
+            </div>
+        `
+    }
+    document.querySelector(".cartProductItems").innerHTML = result;
+}
+document.querySelector(".cartProducts-close").addEventListener("click", () => {
+    document.querySelector(".cartProducts-container").style.display = "none";
+    document.querySelector(".nagivation-container").style.opacity = 1;
+    document.querySelector(".content-container").style.opacity = 1;
+    document.querySelector(".banner-container").style.opacity = 1;
+})
