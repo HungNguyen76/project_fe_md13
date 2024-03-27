@@ -580,6 +580,21 @@ document.querySelector(".cartProducts-close").addEventListener("click", () => {
     document.querySelector(".banner-container").style.opacity = 1;
 })
 
+//Hàm xoá sản phẩm trong giỏ hàng
+function deleteCartProductItem(index) {
+    let listUsers = JSON.parse(localStorage.getItem("listUsers"));
+    let checkLogin = localStorage.getItem("checkLogin");
+    let user = listUsers.find((item) => {
+        return item.idUser == checkLogin
+    })
+    let cartUser = user.cartUser;
+    cartUser.splice(index, 1)
+    localStorage.setItem("listUsers", JSON.stringify(listUsers))
+    showCartProducts();
+    showCartProductTotal()
+    caculateTotalProductsPrice()
+}
+
 //Hàm tính tổng tiền sản phẩm có trong giỏ hàng
 function caculateTotalProductsPrice() {
      let listUsers = JSON.parse(localStorage.getItem("listUsers"));
@@ -593,3 +608,22 @@ function caculateTotalProductsPrice() {
     }, 0)
     document.querySelector(".cartProducts-subTotal").innerHTML = `Subtotal: ${USDollar.format(totalPrice)}`
 }
+
+//Hàm hiển thị tổng số lượng sản phẩm trong giỏ hàng
+function showCartProductTotal() {
+    let listUsers = JSON.parse(localStorage.getItem("listUsers"));
+    let checkLogin = localStorage.getItem("checkLogin");
+
+    let user = listUsers.find((item) => {
+        return item.idUser == checkLogin
+    })
+    let cartUser = user.cartUser;
+
+    let total = cartUser.reduce((total, currentValue) => {
+        return total += currentValue.quantity
+    }, 0)
+    document.querySelector(".cart-quantity").innerHTML = `${total}`;
+}
+showCartProductTotal()
+
+
