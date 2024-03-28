@@ -1,0 +1,98 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: sans-serif;
+}
+
+.checkout-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    z-index: -1;
+    position: absolute;
+    top: 120px;
+    left: 140px;
+    width: 80%;
+    margin: 0 auto;
+    background-color: #fff;
+}
+
+
+.delivery-address {
+    padding: 20px 0px;
+    border-bottom: 1px solid #efefef;
+}
+
+.delivery-address p {
+    margin-left: 18px;
+}
+
+.userInfo h3 {
+    font-weight: 600;
+}
+
+.form-group input {
+    margin: 10px 0px;
+    width: 500px;
+    padding: 7px;
+    outline: none;
+    border: 1px solid;
+}
+
+.form-group label {
+    font-weight: 600;
+}
+
+.form-group select {
+    margin: 10px 0px;
+}
+
+.total-orders {
+    flex: 40%;
+    border: 1px solid #efefef;
+    padding: 20px;
+}
+
+.ordered-products {
+    display: grid;
+    grid-template-columns: 100px 100px 100px;
+    gap: 20px;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.ordered-product-img img {
+    width: 100px;
+}
+
+.continue-checkout {
+    border: none;
+    color: #fff;
+    background-color: #000;
+    padding: 10px 50px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.total-orders-detail {
+    border-bottom: 1px solid #efefef;
+    margin-bottom: 20px;
+}
+
+.total-orders-detail .total-orders-quantity,
+.total-orders-price,
+.total-orders-price-tax {
+    font-weight: 600;
+}
+
+.total-orders-price-tax {
+    margin-bottom: 10px;
+}
+
+.invalid {
+    border-color: #f33a58 !important;
+}

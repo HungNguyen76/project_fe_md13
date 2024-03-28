@@ -301,6 +301,17 @@ function showDivs(n) {
   }
   x[slideIndex - 1].style.display = "block";
 }
+let listUsers = JSON.parse(localStorage.getItem("listUsers")) || [];
+
+// listUsers.push({
+//   idUser: 709428841,
+//   email: "admin@gmail.com",
+//   password: "123456",
+//   password_confirmation: "123456",
+//   cartUser: [],
+//   isAdmin: true
+// })
+// localStorage.setItem("listUsers", JSON.stringify(listUsers));
 
 //Format tiền
 const USDollar = new Intl.NumberFormat("en-US", {
@@ -514,7 +525,7 @@ function addToCart(idProduct) {
       if (existingProduct) {
         existingProduct.quantity++;
         localStorage.setItem("listUsers", JSON.stringify(listUsers));
-        alert("Thêm sản phẩm vào giỏ hàng thành công");
+        showCartProductTotal()
       } else {
         cart.push({
           idProduct: idProduct,
@@ -526,6 +537,7 @@ function addToCart(idProduct) {
           productPrice: productPrice,
         });
         localStorage.setItem("listUsers", JSON.stringify(listUsers));
+        showCartProductTotal()
         alert("Thêm sản phẩm vào giỏ hàng thành công");
       }
     }
@@ -689,4 +701,231 @@ function renderSearchInputProduct(params) {
   }
   document.querySelector(".searchProduct-container").innerHTML = result;
   document.querySelector(".content-container").style.opacity = 0.5;
+}
+
+
+// Hàm tăng số lượng sản phẩm
+
+function increaseItem(index) {
+  let listUsers = JSON.parse(localStorage.getItem("listUsers"));
+  let checkLogin = localStorage.getItem("checkLogin");
+
+  // Find the user in listUsers
+  for (let i = 0; i < listUsers.length; i++) {
+      if (listUsers[i].idUser == checkLogin) {
+          let cartUser = listUsers[i].cartUser;
+          for (let j = 0; j < cartUser.length; j++) {
+              if (j == index) {
+                  cartUser[j].quantity += 1;
+                  localStorage.setItem("listUsers", JSON.stringify(listUsers));
+                  showCartProducts();
+                  showCartProductTotal();
+                  caculateTotalProductsPrice();
+                  return;
+              }
+          }
+      }
+  }
+}
+
+// Hàm giảm số lượng sản phẩm
+
+function decreaseItem(index) {
+  let listUsers = JSON.parse(localStorage.getItem("listUsers"));
+  let checkLogin = localStorage.getItem("checkLogin");
+
+  for (let i = 0; i < listUsers.length; i++) {
+      if (listUsers[i].idUser == checkLogin) {
+          let cartUser = listUsers[i].cartUser;
+          for (let j = 0; j < cartUser.length; j++) {
+              if (cartUser[index].quantity > 1) {
+                  cartUser[index].quantity -= 1;
+                  localStorage.setItem("listUsers", JSON.stringify(listUsers));
+                  showCartProducts();
+                  showCartProductTotal();
+                  caculateTotalProductsPrice();
+                  return;
+              } else {
+                  cartUser.splice(index, 1);
+                  localStorage.setItem("listUsers", JSON.stringify(listUsers));
+                  showCartProducts();
+                  showCartProductTotal();
+                  caculateTotalProductsPrice();
+                  return;
+              }
+          }
+      }
+  }
+}
+
+//Hàm thay đổi màu sản phẩm
+function changeProductColor(idProduct, src, idOption) {
+  let listProducts = JSON.parse(localStorage.getItem("listProducts"));
+  let product = listProducts.find((product) => {
+      return product.id == idProduct;
+  })
+  let option = product.options.find((option) => {
+      return option.idOption == idOption;
+  })
+  document.querySelector(".main-image").src = `${src}`;
+  document.querySelector(".product-idOption").innerHTML = `${idOption}`;
+
+  document.querySelector(".stock-size-S").innerHTML = `Size S available in stock ${option.sizes[0].stock}`;
+  document.querySelector(".stock-size-M").innerHTML = `Size M available in stock ${option.sizes[1].stock}`;
+  document.querySelector(".stock-size-L").innerHTML = `Size L available in stock ${option.sizes[2].stock}`;
+}
+
+
+// Hàm chuyển đến trang thanh toán đơn hàng
+document.querySelector(".cartProducts-checkout-btn").addEventListener("click", () => {
+  document.querySelector(".cartProducts-container").style.display = "none";
+  document.querySelector(".banner-container").style.display = "none";
+  document.querySelector(".nagivation-container").style.opacity = 1;
+  renderOrderedProductsList();
+})
+
+// Hàm hiển thị sản phẩm đã thêm vào giỏ hàng trong đơn hàng
+
+function renderOrderedProductsList() {
+  let listUsers = JSON.parse(localStorage.getItem("listUsers"));
+  let checkLogin = localStorage.getItem("checkLogin");
+  let user = listUsers.find((user) => {
+      return user.idUser == checkLogin;
+  })
+
+  let cartUser = user.cartUser;
+  let totalOrders = cartUser.reduce((total, currentValue) => {
+      return total += currentValue.quantity;
+  }, 0)
+
+  let totalOrdersPrice = cartUser.reduce((total, currentValue) => {
+      return total += currentValue.productPrice * currentValue.quantity;
+  }, 0)
+
+  let result = "";
+  for (let i = 0; i < cartUser.length; i++) {
+      result += `
+          <div class="ordered-product">
+              <div class="ordered-product-img">
+                  <img src="${cartUser[i].imageLink}" alt="">
+              </div>
+              <p class="product-quantity">x${cartUser[i].quantity}</p>
+          </div>
+          `;
+  }
+  document.querySelector(".content-container").innerHTML = `
+          <div class="checkout-container">
+                  <div class="userInfo">
+                      <h3>REGISTER A NEW ADDRESS</h3>
+                      <div class="userInfo-form">
+                          <div class="form-group">
+                              <label for="firstname">FIRST NAME</label><br>
+                              <input type="text" id="firstname" name="firstname" placeholder="Please enter your first name" class="form-control">
+                          </div>
+                          <div class="form-group">
+                              <label for="lastname">LAST NAME</label><br>
+                              <input type="text" id="lastname" name="lastname" placeholder="Please enter your last name" class="form-control">
+                          </div>
+                          <div class="form-group">
+                              <label for="provice">PROVINCE</label><br>
+                              <input type="text" id="province" name="province" placeholder="Please enter your provice" class="form-control">
+                          </div>
+                          <div class="form-group">
+                              <label for="district">DISTRICT</label><br>
+                              <input type="text" id="district" name="district" placeholder="Please enter your district" class="form-control">
+                          </div>
+                          <div class="form-group">
+                              <label for="address">ADDRESS DETAILS</label><br>
+                              <input id="address" name="address" type="text" placeholder="Apartment, suites, zones, buildings, floors etc" class="form-control"><br>
+                          </div>
+                          <div class="form-group">
+                              <label for="phone">PHONE</label><br>
+                              <input id="phone" name="phone" type="text" placeholder="Enter 10-11 numbers starting with 0" class="form-control"><br>
+                          </div>
+                          <div class="form-group">
+                              <label for="mobilePhone">MOBILE PHONE</label><br>
+                              <input id="mobilePhone" name="mobilePhone" type="text" placeholder="Enter 10-11 numbers starting with 0" class="form-control"><br>
+                          </div>
+                          <p>We may contact you by phone or email if we have questions about your order and shipping options.</p>
+                          <input type="checkbox" class="showPassword">
+                          <span>Use as billing address</span><br>
+                          <button class="continue-checkout" onclick = "checkout()">CONTINUE CHECKOUT</button>
+                      </div>
+                  </div>
+                  <div class="total-orders">
+                      <div class="total-orders-detail">
+                          <p class="total-orders-quantity">TOTAL ORDERS | ${totalOrders} PRODUCTS</p>
+                          <p class="total-orders-price">TOTAL ${USDollar.format(totalOrdersPrice)}</p>
+                          <p class="total-orders-tax">Value added tax included ${USDollar.format(0.05 * totalOrdersPrice)}</p>
+                          <p class="total-orders-price-tax">TOTAL ORDERS ${USDollar.format(1.05 * totalOrdersPrice)}</p>
+                      </div>
+                      <div class="ordered-products">
+                          ${result}
+                      </div>
+                  </div>
+          </div>
+      `;
+
+  document.querySelector(".footer-container").classList.add("active-footer");
+  let firstName = document.querySelector("#firstname");
+  let lastName = document.querySelector("#lastname");
+  let province = document.querySelector("#province");
+  let district = document.querySelector("#district");
+  let address = document.querySelector("#address");
+  let phone = document.querySelector("#phone");
+  let mobilePhone = document.querySelector("#mobilePhone");
+  firstName.value = user.userInfo.firstName;
+  lastName.value = user.userInfo.lastName;
+  province.value = user.userInfo.province;
+  district.value = user.userInfo.district;
+  address.value = user.userInfo.address;
+  phone.value = user.userInfo.phone;
+  mobilePhone.value = user.userInfo.mobilePhone;
+}
+
+
+
+
+document.querySelector(".admin").addEventListener("click", () => {
+  window.location.href = "http://127.0.0.1:5500/pages/admin.html";
+})
+
+
+// Hàm kiểm tra người dùng có phải admin hay không
+function checkIsAdmin() {
+  let checkLogin = localStorage.getItem("checkLogin");
+  let listUsers = JSON.parse(localStorage.getItem("listUsers"));
+  let user = listUsers.find((user) => {
+      return user.email == "admin@gmail.com";
+  })
+  // console.log(user.email);
+  if(user.email == "admin@gmail.com") {
+      return true;
+  } else {
+      return false;
+  }
+}
+
+
+//Hàm ẩn hiện icon admin
+if (checkIsAdmin()) {
+  document.querySelector(".admin").style.display = "block";
+}
+
+
+function checkout() {
+  console.log("checkout");
+  validateCartProduct();
+  validateUserInfo();
+  FinalCheckout();
+  document.querySelector(".cart-quantity").innerHTML = 0;
+}
+
+function FinalCheckout() {
+  let result = "";
+  document.querySelector(".content-container").innerHTML = `
+      <div class="final-checkout">
+          <h1>Thanks for your purchase!</h1>
+      </div>
+  `
 }
