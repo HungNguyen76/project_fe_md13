@@ -260,6 +260,8 @@ for (let i = 0; i < listProductsStock.length; i++) {
 localStorage.setItem("listProducts", JSON.stringify(listProductsStock));
 
 
+//Xử lý tự động thêm tài khoản admin vào mỗi khi load trang web. có thêm isAdmin: true, để check người 
+//dùng có phải admin hay không
 let listUsers = JSON.parse(localStorage.getItem("listUsers")) || [];
 listUsers.push({
   idUser: 709428841,
@@ -270,8 +272,8 @@ listUsers.push({
   isAdmin: true
 })
 localStorage.setItem("listUsers", JSON.stringify(listUsers));
-// Hàm convert tiền tệ
 
+// Hàm convert tiền tệ
 const USDollar = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
@@ -322,8 +324,8 @@ function plusDivs(n) {
   showDivs(slideIndex += n);
 }
 
-// The showDiv() function hides (display="none") all elements with the class name "mySlides", 
-// and displays (display="block") the element with the given slideIndex
+// Hàm này dùng để ẩn đi (display="none") tất cả thẻ elements có class là "mySlides", 
+// và hiển thị (display="block") với thẻ có slideIndex được cho
 function showDivs(n) {
   let i;
   let x = document.getElementsByClassName("mySlides");
@@ -336,8 +338,7 @@ function showDivs(n) {
   x[slideIndex - 1].style.display = "block";
 }
 
-// Hàm tìm kiếm sản phẩm
-
+// Hàm tìm kiếm sản phẩm  
 function searchProduct() {
   document.querySelector(".search-input").style.visibility = "visible";
 }
@@ -355,9 +356,6 @@ function deleteSearchInput() {
 function searchInputProduct() {
   let listProducts = JSON.parse(localStorage.getItem("listProducts"));
   let valueInputSearch = document.querySelector(".search-product").value;
-  console.log(valueInputSearch);
-  let resultSearch = []
-
   let userSearch = listProducts.filter((item) => {
       return item.name.toUpperCase().includes(valueInputSearch.toUpperCase())
   })
@@ -397,7 +395,6 @@ function handleClickOutside(event) {
 }
 
 // Hàm hiển thị sản phẩm khi người dùng nhập dữ liệu vào ô tìm kiếm
-
 function renderSearchInputProduct(params) {
   let result = "";
   for (let i = 0; i < params.length; i++) {
@@ -534,10 +531,7 @@ function renderProductItem(idProduct) {
           <div class="productItem-description">
               <h2>${productItem.name}</h2>
               <h3>${USDollar.format(productItem.price)}</h3>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente error totam harum iste deserunt
-              suscipit enim aliquam nihil veritatis quam minima architecto ad corporis, facere ut veniam et quas
-              culpa.
-              </p>
+              <p>${productItem.des}</p>
               <h4>Size</h4>
               <div>
                   <input type="radio" id="S" value="S" name="size" class="size-option">
