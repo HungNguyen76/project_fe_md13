@@ -241,37 +241,75 @@ let listProductsStock = [
   },
 ];
 
+function uuid() {
+  return new Date().getMilliseconds() + Math.floor(Math.random() * 999999999);
+}
+
+for (let i = 0; i < listProductsStock.length; i++) {
+  listProductsStock[i].id = uuid();
+  listProductsStock[i].quantity = 1;
+}
+
+
+for (let i = 0; i < listProductsStock.length; i++) {
+  for (let j = 0; j < listProductsStock[i].options.length; j++) {
+      listProductsStock[i].options[j].idOption = uuid();
+  }
+}
+
+localStorage.setItem("listProducts", JSON.stringify(listProductsStock));
+
+
+let listUsers = JSON.parse(localStorage.getItem("listUsers")) || [];
+listUsers.push({
+  idUser: 709428841,
+  email: "admin@gmail.com",
+  password: "123456",
+  password_confirmation: "123456",
+  cartUser: [],
+  isAdmin: true
+})
+localStorage.setItem("listUsers", JSON.stringify(listUsers));
+// Hàm convert tiền tệ
+
+const USDollar = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+});
+const VND = new Intl.NumberFormat('vi-VN', {
+  style: 'currency',
+  currency: 'VND',
+});
+
 window.onload = function () {
   const bar = document.getElementById("bar");
   const close = document.getElementById("close");
   const nav = document.getElementById("navbar");
 
   if (bar) {
-    bar.addEventListener("click", () => {
-      nav.classList.add("active");
-    });
+      bar.addEventListener("click", () => {
+          nav.classList.add("active");
+      });
   }
 
   if (close) {
-    close.addEventListener("click", () => {
-      nav.classList.remove("active");
-    });
+      close.addEventListener("click", () => {
+          nav.classList.remove("active");
+      });
   }
 };
 
 // Create a Fixed Header on Scroll
-window.onscroll = function () {
-  myFunction();
-};
+window.onscroll = function () { myFunction() };
 
 let header = document.querySelector(".nagivation-container");
 let sticky = header.offsetTop;
 
 function myFunction() {
   if (window.pageYOffset > sticky) {
-    header.classList.add("sticky");
+      header.classList.add("sticky");
   } else {
-    header.classList.remove("sticky");
+      header.classList.remove("sticky");
   }
 }
 
@@ -281,66 +319,144 @@ let slideIndex = 1;
 showDivs(slideIndex);
 
 function plusDivs(n) {
-  showDivs((slideIndex += n));
+  showDivs(slideIndex += n);
 }
 
-// The showDiv() function hides (display="none") all elements with the class name "mySlides",
+// The showDiv() function hides (display="none") all elements with the class name "mySlides", 
 // and displays (display="block") the element with the given slideIndex
 function showDivs(n) {
   let i;
   let x = document.getElementsByClassName("mySlides");
-  if (n > x.length) {
-    slideIndex = 1;
-  }
-  if (n < 1) {
-    slideIndex = x.length;
-  }
+  if (n > x.length) { slideIndex = 1 }
+  if (n < 1) { slideIndex = x.length }
   // Hides (display="none") all elements with the class name "mySlides"
   for (i = 0; i < x.length; i++) {
-    x[i].style.display = "none";
+      x[i].style.display = "none";
   }
   x[slideIndex - 1].style.display = "block";
 }
-let listUsers = JSON.parse(localStorage.getItem("listUsers")) || [];
 
-// listUsers.push({
-//   idUser: 709428841,
-//   email: "admin@gmail.com",
-//   password: "123456",
-//   password_confirmation: "123456",
-//   cartUser: [],
-//   isAdmin: true
-// })
-// localStorage.setItem("listUsers", JSON.stringify(listUsers));
+// Hàm tìm kiếm sản phẩm
 
-//Format tiền
-const USDollar = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-});
-
-//Tạo id ngẫu nhiên cho sản phẩm
-function uuid() {
-  return new Date().getMilliseconds() + Math.floor(Math.random() * 999999999);
+function searchProduct() {
+  document.querySelector(".search-input").style.visibility = "visible";
 }
 
-//Thêm id và số lượng cho sản phẩm
-for (let i = 0; i < listProductsStock.length; i++) {
-  listProductsStock[i].id = uuid();
-  listProductsStock[i].quantity = 1;
+function closeSearchProduct() {
+  document.querySelector(".search-input").style.visibility = "hidden";
 }
 
-//Thêm id cho option
-for (let i = 0; i < listProductsStock.length; i++) {
-  for (let j = 0; j < listProductsStock[i].options.length; j++) {
-    listProductsStock[i].options[j].idOption = uuid();
+function deleteSearchInput() {
+  document.querySelector(".search-product").value = "";
+  document.querySelector(".searchProduct-container").innerHTML = "";
+  document.querySelector(".content-container").style.opacity = 1;
+}
+
+function searchInputProduct() {
+  let listProducts = JSON.parse(localStorage.getItem("listProducts"));
+  let valueInputSearch = document.querySelector(".search-product").value;
+  console.log(valueInputSearch);
+  let resultSearch = []
+
+  let userSearch = listProducts.filter((item) => {
+      return item.name.toUpperCase().includes(valueInputSearch.toUpperCase())
+  })
+
+  renderSearchInputProduct(userSearch);
+}
+
+// Hàm xử lí khi người dùng xoá hết dữ liệu trong ô input thì ẩn vùng hiển thị sản phẩm người dùng đã tìm kiếm
+document.querySelector(".search-product").addEventListener("input", handleInputClear);
+
+function handleInputClear() {
+  let valueInputSearch = document.querySelector(".search-product").value;
+
+  if (valueInputSearch === "") {
+      clearSearchResults();
+      document.querySelector(".content-container").style.opacity = 1;
   }
 }
 
-//Lưu listProducts vào localStorage
-localStorage.setItem("listProducts", JSON.stringify(listProductsStock));
+function clearSearchResults() {
+  document.querySelector(".searchProduct-container").innerHTML = "";
+}
 
-//Hàm render list tất cả sản phẩm
+// Hàm xử lí khi click vào các vùng khác thì ẩn vùng hiển thị sản phẩm người dùng đã tìm kiếm
+document.addEventListener("click", handleClickOutside);
+
+function handleClickOutside(event) {
+  const searchContainer = document.querySelector(".searchProduct-container");
+  const cartProductItem = document.querySelector(".cart-product");
+  const target = event.target;
+
+  // Kiểm tra xem người dùng có click vào phần bên ngoài vùng hiển thị sản phẩm người dùng đã tìm kiếm hay không
+  if (!searchContainer.contains(target) && !cartProductItem.contains(target)) {
+      clearSearchResults();
+      document.querySelector(".content-container").style.opacity = 1;
+  }
+}
+
+// Hàm hiển thị sản phẩm khi người dùng nhập dữ liệu vào ô tìm kiếm
+
+function renderSearchInputProduct(params) {
+  let result = "";
+  for (let i = 0; i < params.length; i++) {
+      result += `
+          <div class="seacrh-ProductItem" onclick="renderProductItem('${params[i].id}')">
+              <div class="seacrh-ProductItem-image">
+                  <img src="${params[i].img}" alt="">
+              </div>
+              <div class="seacrh-ProductItem-info">
+                  <h4>${params[i].name}</h4>
+                  <p>${USDollar.format(params[i].price)}</p>
+              </div>
+          </div>
+      `;
+  }
+  document.querySelector(".searchProduct-container").innerHTML = result;
+  document.querySelector(".content-container").style.opacity = 0.5;
+}
+
+
+if (checkLogin()) {
+  document.querySelector(".login-button").style.display = "none";
+  document.querySelector(".logout-button").style.display = "block";
+}
+
+if (checkIsAdmin()) {
+  document.querySelector(".admin").style.display = "block";
+}
+
+document.querySelector(".admin").addEventListener("click", () => {
+  window.location.href = "http://127.0.0.1:5500/pages/admin.html";
+})
+
+// Hàm hiển thị danh sách sản phẩm
+function renderListProducts(params) {
+  let result = "";
+  for (let i = 0; i < params.length; i++) {
+      result += `
+          <div class="product-item" onclick="renderProductItem('${params[i].id}')">
+              <div class="product-image">
+                  <img src="${params[i].img}" alt="">
+              </div>
+              <div class="product-description">   
+                  <div class="product-type">
+                      <span>${params[i].type}</span>
+                      <span>S-M-L</span>
+                  </div>
+                  <h4 class="product-name">${params[i].name}</h4>
+                  <p>${USDollar.format(params[i].price)}</p>
+              </div>
+          </div>
+          `
+  }
+  document.querySelector(".content-container").innerHTML = result;
+  document.querySelector(".content-container").style.display = "flex";
+  document.querySelector(".banner-container").style.display = "none";
+  document.querySelector(".footer-container").classList.remove("active-footer");
+}
+
 function renderListAllProducts() {
   let listProducts = JSON.parse(localStorage.getItem("listProducts"));
   renderListProducts(listProducts);
@@ -348,97 +464,99 @@ function renderListAllProducts() {
   pagination();
 }
 
-//Hàm render list sản phẩm dành cho nam
+function renderWomenListProducts() {
+  let listProducts = JSON.parse(localStorage.getItem("listProducts"));
+  let listProductsWomen = [];
+  for (let i = 0; i < listProducts.length; i++) {
+      if (listProducts[i].type == "WOMEN") {
+          listProductsWomen.push(listProducts[i])
+      }
+  }
+  renderListProducts(listProductsWomen);
+  document.querySelector(".listPage").style.display = "none";
+}
+
 function renderMenListProducts() {
   let listProducts = JSON.parse(localStorage.getItem("listProducts"));
   let listProductsMen = [];
   for (let i = 0; i < listProducts.length; i++) {
-    if (listProducts[i].type == "MEN") {
-      listProductsMen.push(listProducts[i]);
-    }
+      if (listProducts[i].type == "MEN") {
+          listProductsMen.push(listProducts[i])
+      }
   }
   renderListProducts(listProductsMen);
   document.querySelector(".listPage").style.display = "none";
 }
 
-// Hàm hiển thị danh sách sản phẩm
-function renderListProducts(params) {
-  let result = "";
-  for (let i = 0; i < params.length; i++) {
-    result += `
-            <div class="product-item" onclick="renderProductItem('${
-              params[i].id
-            }')">
-                <div class="product-image">
-                    <img src="${params[i].img}" alt="">
-                </div>
-                <div class="product-description">   
-                    <div class="product-type">
-                        <span>${params[i].type}</span>
-                        <span>S-M-L</span>
-                    </div>
-                    <h4 class="product-name">${params[i].name}</h4>
-                    <p>${USDollar.format(params[i].price)}</p>
-                </div>
-            </div>
-            `;
+function renderKidsListProducts() {
+  let listProducts = JSON.parse(localStorage.getItem("listProducts"));
+  let listProductsKids = [];
+  for (let i = 0; i < listProducts.length; i++) {
+      if (listProducts[i].type == "KIDS") {
+          listProductsKids.push(listProducts[i])
+      }
   }
-  document.querySelector(".content-container").innerHTML = result;
-  document.querySelector(".content-container").style.display = "flex";
-  document.querySelector(".banner-container").style.display = "none";
-  // document.querySelector(".footer-container").classList.remove("active-footer");
+  renderListProducts(listProductsKids);
+  document.querySelector(".listPage").style.display = "none";
 }
 
-//Hiển thị chi tiết sản phẩm
+function renderBabyListProducts() {
+  let listProducts = JSON.parse(localStorage.getItem("listProducts"));
+  let listProductsBaby = [];
+  for (let i = 0; i < listProducts.length; i++) {
+      if (listProducts[i].type == "BABY") {
+          listProductsBaby.push(listProducts[i])
+      }
+  }
+  renderListProducts(listProductsBaby);
+  document.querySelector(".listPage").style.display = "none";
+}
+
+// Hàm hiển thị chi tiết từng sản phẩm
+
 function renderProductItem(idProduct) {
+
   let listProducts = JSON.parse(localStorage.getItem("listProducts"));
   let productItem = listProducts.find((item) => {
-    return item.id == idProduct;
-  });
+      return item.id == idProduct
+  })
 
   let result = `
-        <div class="product">
-            <div class="productItem-image">
-                <div class="productItem-main-image">
-                <img src="${productItem.img}" alt="" class="main-image">
-            </div>
-                <div class="productItem-image-color">
-            
-                </div>
-            </div>
-            <div class="productItem-description">
-                <h2>${productItem.name}</h2>
-                <h3>${USDollar.format(productItem.price)}</h3>
-                <p>${productItem.des}</p>
-                <h4>Size</h4>
-                <div>
-                    <input type="radio" id="S" value="S" name="size" class="size-option">
-                    <label for="S">S</label>
-                    <br>
-                    <input type="radio" id="M" value="M" name="size" class="size-option">
-                    <label for="M">M</label>
-                    <br>
-                    <input type="radio" id="L" value="L" name="size" class="size-option">
-                    <label for="L">L</label>
-                </div>
-                <button class="addtocart-button" onclick="addToCart('${
-                  productItem.id
-                }')">ADD TO CART</button><br>
-                <p class="product-idOption">${
-                  productItem.options[0].idOption
-                }</p>
-                <span class="stock-size-S">Size S available in stock ${
-                  productItem.options[0].sizes[0].stock
-                }</span><br>
-                <span class="stock-size-M">Size M available in stock ${
-                  productItem.options[0].sizes[1].stock
-                }</span><br>
-                <span class="stock-size-L">Size L available in stock ${
-                  productItem.options[0].sizes[2].stock
-                }</span>
-            </div>
-        </div>
-        `;
+      <div class="product">
+          <div class="productItem-image">
+              <div class="productItem-main-image">
+              <img src="${productItem.img}" alt="" class="main-image">
+          </div>
+              <div class="productItem-image-color">
+          
+              </div>
+          </div>
+          <div class="productItem-description">
+              <h2>${productItem.name}</h2>
+              <h3>${USDollar.format(productItem.price)}</h3>
+              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente error totam harum iste deserunt
+              suscipit enim aliquam nihil veritatis quam minima architecto ad corporis, facere ut veniam et quas
+              culpa.
+              </p>
+              <h4>Size</h4>
+              <div>
+                  <input type="radio" id="S" value="S" name="size" class="size-option">
+                  <label for="S">S</label>
+                  <br>
+                  <input type="radio" id="M" value="M" name="size" class="size-option">
+                  <label for="M">M</label>
+                  <br>
+                  <input type="radio" id="L" value="L" name="size" class="size-option">
+                  <label for="L">L</label>
+              </div>
+              <button class="addtocart-button" onclick="addToCart('${productItem.id}')">ADD TO CART</button><br>
+              <p class="product-idOption">${productItem.options[0].idOption}</p>
+              <span class="stock-size-S">Size S available in stock ${productItem.options[0].sizes[0].stock}</span><br>
+              <span class="stock-size-M">Size M available in stock ${productItem.options[0].sizes[1].stock}</span><br>
+              <span class="stock-size-L">Size L available in stock ${productItem.options[0].sizes[2].stock}</span>
+          </div>
+      </div>
+      `;
   document.querySelector(".content-container").style.display = "flex";
   document.querySelector(".content-container").innerHTML = result;
   document.querySelector(".banner-container").style.display = "none";
@@ -446,45 +564,39 @@ function renderProductItem(idProduct) {
 
   let productColors = "";
   for (let i = 0; i < productItem.options.length; i++) {
-    productColors += `
-            <img src="${productItem.options[i].src}" alt="" onclick="changeProductColor(${idProduct}, '${productItem.options[i].src}', '${productItem.options[i].idOption}')">
-        `;
+
+      productColors += `
+          <img src="${productItem.options[i].src}" alt="" onclick="changeProductColor(${idProduct}, '${productItem.options[i].src}', '${productItem.options[i].idOption}')">
+      `
   }
   productItemColor.innerHTML = productColors;
 }
 
-//Hàm kiểm tra xem đã đăng nhập hay chưa
-function checkLogin() {
-  let isLogin = localStorage.getItem("checkLogin");
-  if (isLogin == null) {
-    return false;
-  } else {
-    return true;
-  }
-}
+function changeProductColor(idProduct, src, idOption) {
+  // console.log(idProduct);
+  let listProducts = JSON.parse(localStorage.getItem("listProducts"));
+  let product = listProducts.find((product) => {
+      return product.id == idProduct;
+  })
+  let option = product.options.find((option) => {
+      return option.idOption == idOption;
+  })
+  document.querySelector(".main-image").src = `${src}`;
+  document.querySelector(".product-idOption").innerHTML = `${idOption}`;
 
-//Hàm kiểm tra đăng xuất hay chưa
-function checkLogout() {
-  let confirmLogout = confirm("Bạn có muốn thoát không?");
-  if (confirmLogout) {
-    localStorage.removeItem("checkLogin");
-    window.location.href = "index.html";
-    document.querySelector(".logout-button").style.display = "hidden";
-  }
-}
-
-if (checkLogin()) {
-  document.querySelector(".login-button").style.display = "none";
-  document.querySelector(".logout-button").style.display = "block";
+  document.querySelector(".stock-size-S").innerHTML = `Size S available in stock ${option.sizes[0].stock}`;
+  document.querySelector(".stock-size-M").innerHTML = `Size M available in stock ${option.sizes[1].stock}`;
+  document.querySelector(".stock-size-L").innerHTML = `Size L available in stock ${option.sizes[2].stock}`;
 }
 
 // Hàm thêm sản phẩm vào giỏ hàng
+
 function addToCart(idProduct) {
   let checkLogin = localStorage.getItem("checkLogin");
 
   if (checkLogin == null) {
-    alert("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng");
-    return;
+      showErrorNotLoginToast();
+      return;
   }
 
   let listProducts = JSON.parse(localStorage.getItem("listProducts"));
@@ -494,57 +606,83 @@ function addToCart(idProduct) {
 
   const sizeOptions = document.querySelectorAll(".size-option");
   for (let i = 0; i < sizeOptions.length; i++) {
-    if (sizeOptions[i].checked) {
-      selectedSize = sizeOptions[i].value;
-      break;
-    }
+      if (sizeOptions[i].checked) {
+          selectedSize = sizeOptions[i].value;
+          break;
+      }
   }
-  if (selectedSize == null) {
-    alert("Bạn cần chọn size");
-    return;
+
+  if (selectedSize === null) {
+      showErrorSizeToast();
+      return;
   }
-  let product = listProducts.find((item) => {
-    return item.id == idProduct;
+
+  let product = listProducts.find((product) => {
+      return product.id == idProduct;
   });
 
-  let option = product.options.find((item) => {
-    return item.idOption == idOption;
-  });
+  let option = product.options.find((x) => {
+      return x.idOption == idOption
+  })
+
   let imageLink = option.src;
   let productName = product.name;
   let productPrice = product.price;
 
   for (let i = 0; i < listUsers.length; i++) {
-    if (listUsers[i].idUser == checkLogin) {
-      let cart = listUsers[i].cartUser;
+      if (listUsers[i].idUser == checkLogin) {
+          let cart = listUsers[i].cartUser;
 
-      //kiểm tra sản phẩm đã có trong giỏ hàng chưa
-      let existingProduct = cart.find((item) => {
-        return item.size == selectedSize && item.idOption == idOption;
-      });
-      if (existingProduct) {
-        existingProduct.quantity++;
-        localStorage.setItem("listUsers", JSON.stringify(listUsers));
-        showCartProductTotal()
-      } else {
-        cart.push({
-          idProduct: idProduct,
-          size: selectedSize,
-          quantity: 1,
-          idOption: idOption,
-          imageLink: imageLink,
-          productName: productName,
-          productPrice: productPrice,
-        });
-        localStorage.setItem("listUsers", JSON.stringify(listUsers));
-        showCartProductTotal()
-        alert("Thêm sản phẩm vào giỏ hàng thành công");
+          // Check if the product with the same idOption and selectedSize already exists in the cart
+          let existingProduct = cart.find((item) => {
+              return item.idOption == idOption && item.size == selectedSize;
+          });
+
+          if (existingProduct) {
+              // Increment the quantity if the product already exists
+              existingProduct.quantity++;
+              localStorage.setItem("listUsers", JSON.stringify(listUsers));
+              showCartProductTotal()
+          } else {
+              // Add the product to the cart with quantity 1, image link, and product name
+              cart.push({
+                  idProduct: idProduct,
+                  idOption: idOption,
+                  size: selectedSize,
+                  quantity: 1,
+                  imageLink: imageLink,
+                  productName: productName,
+                  productPrice: productPrice
+              });
+              localStorage.setItem("listUsers", JSON.stringify(listUsers));
+              showCartProductTotal()
+          }
       }
-    }
   }
 }
 
-//Hàm hiển thị danh sách sản phẩm giỏ hàng
+
+// Hàm hiển thị tổng số lượng sản phẩm trong giỏ hàng
+function showCartProductTotal() {
+  let listUsers = JSON.parse(localStorage.getItem("listUsers"));
+  let checkLogin = localStorage.getItem("checkLogin");
+
+  let user = listUsers.find((item) => {
+      return item.idUser == checkLogin;
+  })
+
+  let cartUser = user.cartUser;
+
+  let total = cartUser.reduce((total, currentValue) => {
+      return total += currentValue.quantity;
+  }, 0)
+
+  document.querySelector(".cart-quantity").innerHTML = `${total}`;
+}
+
+showCartProductTotal();
+
+// Hàm hiển thị danh sách sản phẩm trong giỏ hàng
 function showCartProducts() {
   document.querySelector(".cartProducts-container").style.display = "block";
   document.querySelector(".nagivation-container").style.opacity = 0.5;
@@ -553,159 +691,64 @@ function showCartProducts() {
 
   let listUsers = JSON.parse(localStorage.getItem("listUsers"));
   let checkLogin = localStorage.getItem("checkLogin");
-  let user = listUsers.find((item) => {
-    return item.idUser == checkLogin;
-  });
+
+  let user = listUsers.find((user) => {
+      return user.idUser == checkLogin;
+  })
+
   let cartUser = user.cartUser;
+
   let result = "";
   for (let i = 0; i < cartUser.length; i++) {
-    result += `
-        <div class="cartProductItem" id = "cartProductItem_${i}">
-                <div class="cartItem">
-                    <div class="cartProductItem-image">
-                        <img src="${cartUser[i].imageLink}" alt="">
-                    </div>
-                    <div class="cartProductItem-info">
-                        <h4>${cartUser[i].productName}</h4>
-                        <p>Product code: ${cartUser[i].idOption}</p>
-                        <p>Size: ${cartUser[i].size}</p>
-                        <p>${USDollar.format(cartUser[i].productPrice)}</p>
-                            <div class="changeQuantity-button">
-                                <button>
-                                    <span class="material-symbols-outlined" onclick="decreaseItem(${i})">
-                                        remove
-                                    </span>
-                                </button>
-                                
-                                <span class="productItem-quantity" id="quantity">${
-                                  cartUser[i].quantity
-                                }</span>
+      result += `
+          <div class="cartProductItem" id = "cartProductItem_${i}">
+              <div class="cartItem">
+                  <div class="cartProductItem-image">
+                      <img src="${cartUser[i].imageLink}" alt="">
+                  </div>
+                  <div class="cartProductItem-info">
+                      <h4>${cartUser[i].productName}</h4>
+                      <p>Product code: ${cartUser[i].idOption}</p>
+                      <p>Size: ${cartUser[i].size}</p>
+                      <p>${USDollar.format(cartUser[i].productPrice)}</p>
+                          <div class="changeQuantity-button">
+                              <button>
+                                  <span class="material-symbols-outlined" onclick="decreaseItem(${i})">
+                                      remove
+                                  </span>
+                              </button>
+                              
+                              <span class="productItem-quantity" id="quantity">${cartUser[i].quantity}</span>
 
-                                <button>
-                                    <span class="material-symbols-outlined" onclick="increaseItem(${i})">
-                                        add
-                                    </span>
-                                </button>
-                            </div>
-                    </div>
-                </div>
-                <div class="cartItem-delete-button" onclick = "deleteCartProductItem(${i})">
-                        <span class="material-symbols-outlined">
-                            close
-                        </span>
-                </div>
-            </div>
-        `;
+                              <button>
+                                  <span class="material-symbols-outlined" onclick="increaseItem(${i})">
+                                      add
+                                  </span>
+                              </button>
+                          </div>
+                  </div>
+              </div>
+              <div class="cartItem-delete-button" onclick = "deleteCartProductItem(${i})">
+                      <span class="material-symbols-outlined">
+                          close
+                      </span>
+              </div>
+          </div>
+      `;
   }
   document.querySelector(".cartProductItems").innerHTML = result;
   caculateTotalProductsPrice();
 }
+
 document.querySelector(".cartProducts-close").addEventListener("click", () => {
   document.querySelector(".cartProducts-container").style.display = "none";
   document.querySelector(".nagivation-container").style.opacity = 1;
   document.querySelector(".content-container").style.opacity = 1;
   document.querySelector(".banner-container").style.opacity = 1;
-});
-
-//Hàm xoá sản phẩm trong giỏ hàng
-function deleteCartProductItem(index) {
-  let listUsers = JSON.parse(localStorage.getItem("listUsers"));
-  let checkLogin = localStorage.getItem("checkLogin");
-  let user = listUsers.find((item) => {
-    return item.idUser == checkLogin;
-  });
-  let cartUser = user.cartUser;
-  cartUser.splice(index, 1);
-  localStorage.setItem("listUsers", JSON.stringify(listUsers));
-  showCartProducts();
-  showCartProductTotal();
-  caculateTotalProductsPrice();
-}
-
-//Hàm tính tổng tiền sản phẩm có trong giỏ hàng
-function caculateTotalProductsPrice() {
-  let listUsers = JSON.parse(localStorage.getItem("listUsers"));
-  let checkLogin = localStorage.getItem("checkLogin");
-  let user = listUsers.find((item) => {
-    return item.idUser == checkLogin;
-  });
-  let cartUser = user.cartUser;
-  let totalPrice = cartUser.reduce((total, currentValue) => {
-    return (total += currentValue.productPrice * currentValue.quantity);
-  }, 0);
-  document.querySelector(
-    ".cartProducts-subTotal"
-  ).innerHTML = `Subtotal: ${USDollar.format(totalPrice)}`;
-}
-
-//Hàm hiển thị tổng số lượng sản phẩm trong giỏ hàng
-function showCartProductTotal() {
-  let listUsers = JSON.parse(localStorage.getItem("listUsers"));
-  let checkLogin = localStorage.getItem("checkLogin");
-
-  let user = listUsers.find((item) => {
-    return item.idUser == checkLogin;
-  });
-  let cartUser = user.cartUser;
-
-  let total = cartUser.reduce((total, currentValue) => {
-    return (total += currentValue.quantity);
-  }, 0);
-  document.querySelector(".cart-quantity").innerHTML = `${total}`;
-}
-showCartProductTotal();
-
-//Hàm hiện thanh search tìm kiếm
-function searchProduct() {
-  document.querySelector(".search-input").style.visibility = "visible";
-}
-
-//Hàm ẩn thanh search tìm kiếm
-function closeSearchProduct() {
-  document.querySelector(".search-input").style.visibility = "hidden";
-}
-
-//Hàm xoá input trong ô search
-function deleteSearchInput() {
-  document.querySelector(".search-product").value = "";
-  document.querySelector(".searchProduct-container").innerHTML = "";
-  document.querySelector(".content-container").style.opacity = 1;
-}
-//Hàm tìm kiếm sản phẩm
-function searchInputProduct() {
-  let listProducts = JSON.parse(localStorage.getItem("listProducts"));
-  let valueInputSearch = document.querySelector(".search-product").value;
-  let userSearch = listProducts.filter((item) => {
-    return item.name.toLowerCase().includes(valueInputSearch.toLowerCase());
-  });
-  renderSearchInputProduct(userSearch);
-}
-
-//Hàm render sản phẩm tìm kiếm
-function renderSearchInputProduct(params) {
-  let result = "";
-  for (let i = 0; i < params.length; i++) {
-    result += `
-        <div class="seacrh-ProductItem" onclick="renderProductItem('${
-          params[i].id
-        }')">
-                <div class="seacrh-ProductItem-image">
-                    <img src="${params[i].img}" alt="">
-                </div>
-                <div class="seacrh-ProductItem-info">
-                    <h4>${params[i].name}</h4>
-                    <p>${USDollar.format(params[i].price)}</p>
-                </div>
-            </div>
-        `;
-  }
-  document.querySelector(".searchProduct-container").innerHTML = result;
-  document.querySelector(".content-container").style.opacity = 0.5;
-}
+})
 
 
 // Hàm tăng số lượng sản phẩm
-
 function increaseItem(index) {
   let listUsers = JSON.parse(localStorage.getItem("listUsers"));
   let checkLogin = localStorage.getItem("checkLogin");
@@ -729,7 +772,6 @@ function increaseItem(index) {
 }
 
 // Hàm giảm số lượng sản phẩm
-
 function decreaseItem(index) {
   let listUsers = JSON.parse(localStorage.getItem("listUsers"));
   let checkLogin = localStorage.getItem("checkLogin");
@@ -758,23 +800,122 @@ function decreaseItem(index) {
   }
 }
 
-//Hàm thay đổi màu sản phẩm
-function changeProductColor(idProduct, src, idOption) {
-  let listProducts = JSON.parse(localStorage.getItem("listProducts"));
-  let product = listProducts.find((product) => {
-      return product.id == idProduct;
-  })
-  let option = product.options.find((option) => {
-      return option.idOption == idOption;
-  })
-  document.querySelector(".main-image").src = `${src}`;
-  document.querySelector(".product-idOption").innerHTML = `${idOption}`;
 
-  document.querySelector(".stock-size-S").innerHTML = `Size S available in stock ${option.sizes[0].stock}`;
-  document.querySelector(".stock-size-M").innerHTML = `Size M available in stock ${option.sizes[1].stock}`;
-  document.querySelector(".stock-size-L").innerHTML = `Size L available in stock ${option.sizes[2].stock}`;
+// Hàm xoá sản phẩm trong giỏ hàng  
+function deleteCartProductItem(index) {
+  let listUsers = JSON.parse(localStorage.getItem("listUsers"));
+  let checkLogin = localStorage.getItem("checkLogin");
+  let user = listUsers.find((item) => item.idUser == checkLogin);
+  let cartUser = user.cartUser;
+  cartUser.splice(index, 1);
+  localStorage.setItem("listUsers", JSON.stringify(listUsers));
+  showCartProducts();
+  showCartProductTotal();
+  caculateTotalProductsPrice();
 }
 
+// Hàm tính tổng tiền sản phẩm có trong giỏ hàng
+function caculateTotalProductsPrice() {
+  let listUsers = JSON.parse(localStorage.getItem("listUsers"));
+  let checkLogin = localStorage.getItem("checkLogin");
+  let user = listUsers.find((item) => item.idUser == checkLogin);
+  let cartUser = user.cartUser;
+  let totalPrice = cartUser.reduce((total, currentValue) => {
+      return total += currentValue.productPrice * currentValue.quantity;
+  }, 0)
+  document.querySelector(".cartProducts-subTotal").innerHTML = `SUBOTAL: ${USDollar.format(totalPrice)}`;
+}
+
+// Hàm kiểm tra xem đã đăng nhập hay chưa
+function checkLogin() {
+  let getIsLogin = localStorage.getItem("checkLogin");
+  if (getIsLogin == null) {
+      return false;
+  } else {
+      return true;
+  }
+}
+
+// Hàm kiểm tra người dùng có phải admin hay không
+function checkIsAdmin() {
+  let checkLogin = localStorage.getItem("checkLogin");
+  let listUsers = JSON.parse(localStorage.getItem("listUsers"));
+  let user = listUsers.find((user) => {
+      return user.idUser == checkLogin;
+  })
+  console.log("admin", user.isAdmin, user)
+  if (user.isAdmin) {
+      return true;
+  } else {
+      return false;
+  }
+}
+
+// Hàm kiểm tra đã đăng xuất hay chưa
+function checkLogout() {
+  let confirmLogout = confirm("Bạn có muốn thoát không");
+  if (confirmLogout) {
+      localStorage.removeItem("checkLogin");
+      window.location.href = "index.html";
+      document.querySelector(".logout-button").style.visibility = "hidden";
+  }
+}
+
+// Hàm thực thi phân trang
+function pagination() {
+  let thisPage = 1;
+  let limit = 8;
+  let list = document.querySelectorAll(".product-item");
+
+  function loadItem() {
+      let beginGet = limit * (thisPage - 1);
+      let endGet = limit * thisPage - 1;
+      list.forEach((item, key) => {
+          if (key >= beginGet && key <= endGet) {
+              item.style.display = 'block';
+          } else {
+              item.style.display = 'none';
+          }
+      })
+      listPage();
+  }
+  loadItem();
+  function listPage() {
+      let count = Math.ceil(list.length / limit);
+      document.querySelector('.listPage').innerHTML = '';
+
+      if (thisPage != 1) {
+          let prev = document.createElement('li');
+          prev.innerText = 'PREV';
+          prev.setAttribute('onclick', "changePage(" + (thisPage - 1) + ")");
+          document.querySelector('.listPage').appendChild(prev);
+      }
+
+      for (i = 1; i <= count; i++) {
+          let newPage = document.createElement('li');
+          newPage.innerText = i;
+          if (i == thisPage) {
+              newPage.classList.add('active');
+          }
+          newPage.setAttribute('onclick', "changePage(" + i + ")");
+          document.querySelector('.listPage').appendChild(newPage);
+      }
+
+      if (thisPage != count) {
+          let next = document.createElement('li');
+          next.innerText = 'NEXT';
+          next.setAttribute('onclick', "changePage(" + (thisPage + 1) + ")");
+          document.querySelector('.listPage').appendChild(next);
+      }
+  }
+  function changePage(i) {
+      thisPage = i;
+      loadItem();
+  }
+
+  // Attach the changePage function to the global object
+  window.changePage = changePage;
+}
 
 // Hàm chuyển đến trang thanh toán đơn hàng
 document.querySelector(".cartProducts-checkout-btn").addEventListener("click", () => {
@@ -785,7 +926,6 @@ document.querySelector(".cartProducts-checkout-btn").addEventListener("click", (
 })
 
 // Hàm hiển thị sản phẩm đã thêm vào giỏ hàng trong đơn hàng
-
 function renderOrderedProductsList() {
   let listUsers = JSON.parse(localStorage.getItem("listUsers"));
   let checkLogin = localStorage.getItem("checkLogin");
@@ -884,34 +1024,126 @@ function renderOrderedProductsList() {
 }
 
 
-
-
-document.querySelector(".admin").addEventListener("click", () => {
-  window.location.href = "http://127.0.0.1:5500/pages/admin.html";
-})
-
-
-// Hàm kiểm tra người dùng có phải admin hay không
-function checkIsAdmin() {
-  let checkLogin = localStorage.getItem("checkLogin");
-  let listUsers = JSON.parse(localStorage.getItem("listUsers"));
-  let user = listUsers.find((user) => {
-      return user.email == "admin@gmail.com";
-  })
-  // console.log(user.email);
-  if(user.email == "admin@gmail.com") {
-      return true;
+function validateUserInfo() {
+  let firstName = document.querySelector("#firstname");
+  let lastName = document.querySelector("#lastname");
+  let province = document.querySelector("#province");
+  let district = document.querySelector("#district");
+  let address = document.querySelector("#address");
+  let phone = document.querySelector("#phone");
+  let mobilePhone = document.querySelector("#mobilePhone");
+  let inputElement = document.getElementsByClassName("form-control");
+  if (firstName.value == "" || lastName.value == "" || province.value == "" || district.value == "" || address.value == "") {
+      for (let i = 0; i < inputElement.length; i++) {
+          inputElement[i].classList.add("invalid");
+      }
   } else {
-      return false;
+      for (let i = 0; i < inputElement.length; i++) {
+          inputElement[i].classList.remove("invalid");
+      }
+  }
+  let userInfo = {
+      firstName: firstName.value,
+      lastName: lastName.value,
+      province: province.value,
+      district: district.value,
+      address: address.value,
+      phone: phone.value,
+      mobilePhone: mobilePhone.value
+  }
+  let listProducts = JSON.parse(localStorage.getItem("listProducts"));
+  let listUsers = JSON.parse(localStorage.getItem("listUsers"));
+  let checkLogin = localStorage.getItem("checkLogin");
+  let user = listUsers.find((user) => {
+      return user.idUser == checkLogin;
+  })
+
+  user.userInfo = userInfo;
+  localStorage.setItem("listUsers", JSON.stringify(listUsers));
+}
+
+function getInforProductInProductLocal(productId) {
+  let listProducts = JSON.parse(localStorage.getItem("listProducts"));
+  for (let i in listProducts) {
+      if (listProducts[i].id == productId) {
+          return listProducts[i];
+      }
+  }
+  return false;
+}
+
+function validCart(cart, product) {
+  for (let j in product.options) {
+      for (let k in product.options[j].sizes) {
+          if (product.options[j].sizes[k].key == cart.size) {
+              if (cart.quantity > product.options[j].sizes[k].stock) {
+                  return {
+                      status: false,
+                      name: product.name,
+                      stock: product.options[j].sizes[k].stock
+                  }
+              }
+          }
+      }
+  }
+  return {
+      status: true
   }
 }
 
+function validCartAndUpdateStore(cart, product) {
+  for (let j in product.options) {
+      if (cart.idOption == product.options[j].idOption) {
+          for (let k in product.options[j].sizes) {
+              if (product.options[j].sizes[k].key == cart.size) {
+                  product.options[j].sizes[k].stock -= cart.quantity;
 
-//Hàm ẩn hiện icon admin
-if (checkIsAdmin()) {
-  document.querySelector(".admin").style.display = "block";
+                  let productList = JSON.parse(localStorage.getItem("listProducts"));
+                  for (let i in productList) {
+                      if (productList[i].id == product.id) {
+                          productList[i] = product;
+                          localStorage.setItem("listProducts", JSON.stringify(productList)); // save to local
+                          console.log("da tru")
+                          return;
+                      }
+                  }
+              }
+          }
+      }
+  }
 }
 
+function validateCartProduct() {
+  // ...Các bước kiểm tra thông tin người dùng và lấy các giá trị cần thiết...
+  let listProducts = JSON.parse(localStorage.getItem("listProducts"));
+  let listUsers = JSON.parse(localStorage.getItem("listUsers"));
+  let checkLogin = localStorage.getItem("checkLogin");
+  let user = listUsers.find((user) => {
+      return user.idUser == checkLogin;
+  })
+  let cartUser = user.cartUser;
+
+  for (let i in cartUser) {
+      let validValue = validCart(cartUser[i], getInforProductInProductLocal(cartUser[i].idProduct));
+      if (!validValue.status) {
+          alert("Mon hang " + validValue.name + " chi con: " + validValue.stock + " san pham");
+          return
+      }
+  }
+
+  // tru trong store
+
+  for (let i in cartUser) {
+      let validValue = validCart(cartUser[i], getInforProductInProductLocal(cartUser[i].idProduct));
+      if (validValue.status) {
+          validCartAndUpdateStore(cartUser[i], getInforProductInProductLocal(cartUser[i].idProduct));
+          user.purchaseHistory.push([...cartUser]);
+          cartUser.length = 0;
+          localStorage.setItem("listUsers", JSON.stringify(listUsers));
+      }
+  }
+
+}
 
 function checkout() {
   console.log("checkout");
@@ -922,7 +1154,6 @@ function checkout() {
 }
 
 function FinalCheckout() {
-  let result = "";
   document.querySelector(".content-container").innerHTML = `
       <div class="final-checkout">
           <h1>Thanks for your purchase!</h1>
